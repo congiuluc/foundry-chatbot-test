@@ -1,0 +1,87 @@
+:root {
+    color-scheme: light dark;
+    --bg: #0b1220;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --code-bg: #1e293b;
+    --border: #334155;
+}
+
+/* Light palette: applied for the explicit "light" choice. The page defaults to
+   dark, falling back to the OS preference on first visit (set via script). */
+:root[data-theme="light"] {
+    --bg: #f8fafc;
+    --text: #0f172a;
+    --muted: #475569;
+    --code-bg: #e2e8f0;
+    --border: #cbd5e1;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--code-bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.theme-toggle:hover {
+    border-color: var(--text);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.demo {
+    width: min(720px, 100%);
+    padding: 64px 24px;
+    line-height: 1.6;
+}
+
+.demo h1 {
+    margin-top: 0;
+    font-size: 1.8rem;
+}
+
+.demo .muted {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.demo code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.demo pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+}

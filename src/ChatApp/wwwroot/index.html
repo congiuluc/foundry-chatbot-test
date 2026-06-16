@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foundry Chatbot</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle theme"></button>
+
+    <main class="demo">
+        <h1>Foundry Chatbot</h1>
+        <p>
+            This page hosts the embeddable chatbot widget. Click the launcher in the
+            bottom-right corner to start a conversation.
+        </p>
+        <p>
+            Download the container image from
+            <a href="https://hub.docker.com/r/congiuluc/foundry-chatbot-test">Docker Hub</a>.
+        </p>
+    </main>
+
+    <!-- Embeddable chatbot widget (built from the TypeScript sources in /widget). -->
+    <script src="chatbot-widget.js" data-title="Foundry Chatbot" data-accent="#2563eb" defer></script>
+
+    <!-- Page theme toggle (independent of the chatbot widget's own theme). -->
+    <script>
+        (function () {
+            "use strict";
+            var STORAGE_KEY = "foundry-chatbot:page-theme";
+            var button = document.getElementById("theme-toggle");
+
+            var SUN = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+                '<path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 1a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V2a1 1 0 0 1 1-1zm0 18a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zM1 12a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2H2a1 1 0 0 1-1-1zm18 0a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1zM4.22 4.22a1 1 0 0 1 1.42 0l1.41 1.41a1 1 0 0 1-1.42 1.42L4.22 5.64a1 1 0 0 1 0-1.42zm12.73 12.73a1 1 0 0 1 1.41 0l1.42 1.41a1 1 0 0 1-1.42 1.42l-1.41-1.42a1 1 0 0 1 0-1.41zM19.78 4.22a1 1 0 0 1 0 1.42l-1.41 1.41a1 1 0 0 1-1.42-1.42l1.42-1.41a1 1 0 0 1 1.41 0zM7.05 16.95a1 1 0 0 1 0 1.41l-1.41 1.42a1 1 0 0 1-1.42-1.42l1.42-1.41a1 1 0 0 1 1.41 0z"/></svg>';
+            var MOON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+                '<path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.5 5.5 0 0 1-7.54-7.54A9.05 9.05 0 0 0 12 3z"/></svg>';
+
+            function apply(theme) {
+                document.documentElement.setAttribute("data-theme", theme);
+                button.innerHTML = theme === "dark" ? SUN : MOON;
+                button.title = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+                try {
+                    localStorage.setItem(STORAGE_KEY, theme);
+                } catch (e) {
+                    /* ignore storage failures */
+                }
+            }
+
+            var saved = null;
+            try {
+                saved = localStorage.getItem(STORAGE_KEY);
+            } catch (e) {
+                saved = null;
+            }
+
+            var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            apply(saved || (prefersDark ? "dark" : "light"));
+
+            button.addEventListener("click", function () {
+                var current = document.documentElement.getAttribute("data-theme");
+                apply(current === "dark" ? "light" : "dark");
+            });
+        })();
+    </script>
+</body>
+</html>

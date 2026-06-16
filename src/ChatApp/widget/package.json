@@ -1,0 +1,16 @@
+{
+  "name": "chatbot-widget",
+  "version": "1.0.0",
+  "description": "Embeddable, dependency-free chatbot widget for the ChatApp Foundry backend.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --minify --format=iife --target=es2020 --outfile=../wwwroot/chatbot-widget.js",
+    "watch": "esbuild src/index.ts --bundle --sourcemap --format=iife --target=es2020 --watch --outfile=../wwwroot/chatbot-widget.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "typescript": "^6.0.3"
+  }
+}

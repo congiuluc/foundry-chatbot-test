@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Foundry Chatbot Widget — Documentation</title>
+    <meta name="description"
+        content="Embed the Foundry Chatbot widget on any website with a single script tag. Full reference of data-* options, theming and examples." />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <style>
+        :root {
+            --bg: #0b1120;
+            --surface: #0f172a;
+            --surface-2: #1e293b;
+            --border: #243044;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #2563eb;
+            --accent-2: #1d4ed8;
+            --code-bg: #0b1322;
+            --max: 980px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(1200px 600px at 80% -10%, rgba(37, 99, 235, 0.18), transparent 60%),
+                var(--bg);
+            color: var(--text);
+            font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+                Arial, sans-serif;
+        }
+
+        a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        header.hero {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 72px 24px 32px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(30, 41, 59, 0.6);
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.02em;
+        }
+
+        h1 {
+            margin: 18px 0 12px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.1;
+            background: linear-gradient(180deg, #fff, #93c5fd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .lede {
+            max-width: 680px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        .cta {
+            margin-top: 26px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+
+        .btn.primary {
+            background: linear-gradient(180deg, var(--accent), var(--accent-2));
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .btn.primary:hover {
+            text-decoration: none;
+            filter: brightness(1.06);
+        }
+
+        main {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 16px 24px 96px;
+        }
+
+        section {
+            margin-top: 56px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin: 0 0 8px;
+            scroll-margin-top: 24px;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            margin: 28px 0 8px;
+        }
+
+        p {
+            color: #cbd5e1;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.55));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px 24px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        pre {
+            position: relative;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 18px;
+            overflow: auto;
+            font: 13.5px/1.6 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            color: #e6edf3;
+        }
+
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        :not(pre) > code {
+            background: rgba(148, 163, 184, 0.16);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1px 6px;
+            font-size: 0.88em;
+            color: #e2e8f0;
+        }
+
+        .copy {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--surface-2);
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .copy:hover {
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        td code {
+            white-space: nowrap;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        footer {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 24px;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .note {
+            border-left: 3px solid var(--accent);
+            background: rgba(37, 99, 235, 0.08);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #cbd5e1;
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 18px 0 6px;
+        }
+
+        .badges img {
+            height: 22px;
+        }
+
+        .preview {
+            margin: 34px auto 0;
+            max-width: 560px;
+        }
+
+        .preview img {
+            width: 100%;
+            height: auto;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 24px 60px rgba(2, 6, 23, 0.6);
+        }
+
+        .preview figcaption {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <span class="badge">Foundry Chatbot · Embeddable widget</span>
+        <h1>Add an AI chat widget with one line</h1>
+        <p class="lede">
+            A self-contained script that renders a floating launcher and chat panel on any
+            website. Fully themeable through <code>data-*</code> attributes — no build step
+            required on the host page.
+        </p>
+        <div class="badges">
+            <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" />
+            <img src="https://img.shields.io/badge/.NET-10-512BD4.svg" alt=".NET 10" />
+            <img src="https://img.shields.io/badge/TypeScript-widget-3178C6.svg"
+                alt="TypeScript widget" />
+            <img src="https://img.shields.io/badge/bundle-~26kB-22c55e.svg"
+                alt="Bundle size ~26 kB" />
+            <img src="https://img.shields.io/badge/dependencies-0-success.svg"
+                alt="Zero dependencies" />
+        </div>
+        <div class="cta">
+            <a class="btn primary" href="#quick-start">Quick start</a>
+            <a class="btn" href="#options">Options reference</a>
+            <a class="btn" href="#deploy">Deploy</a>
+        </div>
+        <figure class="preview">
+            <img src="widget-preview.png"
+                alt="Screenshot of the chat panel with a sample conversation" />
+            <figcaption>The widget: a floating launcher and a themeable chat panel.</figcaption>
+        </figure>
+    </header>
+
+    <main>
+        <section id="quick-start">
+            <h2>Quick start</h2>
+            <p>Add this single tag to your page, right before the closing <code>&lt;/body&gt;</code>:</p>
+            <pre><button class="copy" data-copy>Copy</button>&lt;script
+    src="https://your-app.example.com/chatbot-widget.js"
+    data-title="Support"
+    data-accent="#2563eb"
+    defer&gt;&lt;/script&gt;</pre>
+            <p>
+                Replace the <code>src</code> with the URL where your ChatApp deployment serves
+                <code>chatbot-widget.js</code>. By default the widget calls back to that same
+                origin for the chat API; override it with <code>data-api-base</code> when the
+                backend lives elsewhere.
+            </p>
+        </section>
+
+        <section id="theming">
+            <h2>Theming examples</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Brand colours</h3>
+                    <pre><button class="copy" data-copy>Copy</button>&lt;script
+    src=".../chatbot-widget.js"
+    data-title="Acme Help"
+    data-accent="#7c3aed"
+    data-user-bubble="#7c3aed"
+    data-bot-bubble="#312e81"
+    defer&gt;&lt;/script&gt;</pre>
+                </div>
+                <div class="card">
+                    <h3>Light panel</h3>
+                    <pre><button class="copy" data-copy>Copy</button>&lt;script
+    src=".../chatbot-widget.js"
+    data-panel="#f8fafc"
+    data-bot-bubble="#e2e8f0"
+    data-text="#0f172a"
+    defer&gt;&lt;/script&gt;</pre>
+                </div>
+                <div class="card">
+                    <h3>Custom icon · left side</h3>
+                    <pre><button class="copy" data-copy>Copy</button>&lt;script
+    src=".../chatbot-widget.js"
+    data-icon="https://cdn.acme.com/bot.png"
+    data-position="bottom-left"
+    data-greeting="Hi! How can I help?"
+    defer&gt;&lt;/script&gt;</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="options">
+            <h2>Options reference</h2>
+            <p>
+                All configuration is read from <code>data-*</code> attributes on the script tag.
+                Every attribute is optional; omit it to keep the default.
+            </p>
+            <p>
+                Visitors can also switch the panel between light, dark and system themes using
+                the theme button in the header (or the selector in the settings panel); their
+                choice is remembered for the session.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>data-api-base</code></td>
+                        <td>script origin</td>
+                        <td>Backend base URL the widget calls for chat requests.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-title</code></td>
+                        <td><code>Chatbot</code></td>
+                        <td>Header title text shown at the top of the panel.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-accent</code></td>
+                        <td><code>#2563eb</code></td>
+                        <td>Accent colour used for the launcher and primary actions.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-icon</code></td>
+                        <td><span class="tag">none</span></td>
+                        <td>
+                            URL of a custom launcher icon image. Allowed schemes:
+                            <code>https:</code>, <code>data:image/</code>, or a root-relative
+                            <code>/path</code>.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>data-panel</code></td>
+                        <td><code>#1e293b</code></td>
+                        <td>Background colour of the chat panel.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-user-bubble</code></td>
+                        <td>accent</td>
+                        <td>Background colour of user (outgoing) message bubbles.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-bot-bubble</code></td>
+                        <td><code>#334155</code></td>
+                        <td>Background colour of bot (incoming) message bubbles.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-text</code></td>
+                        <td><code>#e2e8f0</code></td>
+                        <td>Primary text colour inside the panel.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-position</code></td>
+                        <td><code>bottom-right</code></td>
+                        <td>Anchor corner: <code>bottom-right</code> or <code>bottom-left</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-allow-settings</code></td>
+                        <td><code>true</code></td>
+                        <td>Set to <code>false</code> to hide the in-panel settings UI.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-greeting</code></td>
+                        <td><code>Ask me anything to get started.</code></td>
+                        <td>Opening assistant message shown in an empty conversation.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-storage-key</code></td>
+                        <td>derived</td>
+                        <td>LocalStorage key used to persist the conversation.</td>
+                    </tr>
+                    <tr>
+                        <td><code>data-debug</code></td>
+                        <td><code>false</code></td>
+                        <td>Set to <code>true</code> for verbose console logging.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="note">
+                <strong>Colour values</strong> accept hex (<code>#0f172a</code>),
+                <code>rgb()/rgba()</code>, <code>hsl()/hsla()</code> or CSS named colours.
+                Invalid values are ignored and fall back to the defaults, so the widget can
+                never be styled into an unreadable state by a malformed attribute.
+            </p>
+        </section>
+
+        <section id="api-base">
+            <h2>Pointing the widget at a backend</h2>
+            <p>
+                When the widget is embedded on a different domain than the ChatApp deployment,
+                set <code>data-api-base</code> to the deployment URL:
+            </p>
+            <pre><button class="copy" data-copy>Copy</button>&lt;script
+    src="https://cdn.acme.com/chatbot-widget.js"
+    data-api-base="https://chat.acme.com"
+    data-title="Acme Support"
+    defer&gt;&lt;/script&gt;</pre>
+            <p>
+                Make sure the backend allows cross-origin requests from the embedding site
+                (CORS) so the browser can reach the streaming endpoint.
+            </p>
+        </section>
+
+        <section id="deploy">
+            <h2>Deploying the backend</h2>
+            <p>
+                The widget is served by the .NET 10 <strong>ChatApp</strong> backend, which also
+                exposes the streaming chat API. Build the widget bundle, then ship the app as a
+                container.
+            </p>
+
+            <h3>1. Build the widget bundle</h3>
+            <pre><button class="copy" data-copy>Copy</button>cd src/ChatApp/widget
+npm install
+npm run build   # outputs ../wwwroot/chatbot-widget.js</pre>
+
+            <h3>2. Build &amp; push the container image</h3>
+            <p>Uses the included script to build the image and push it to Azure Container Registry:</p>
+            <pre><button class="copy" data-copy>Copy</button>./scripts/build-and-push.ps1 -RegistryName &lt;acrName&gt; -Tag v1</pre>
+
+            <h3>3. Deploy to Azure Container Apps</h3>
+            <pre><button class="copy" data-copy>Copy</button>./scripts/deploy-containerapp.ps1 `
+    -ResourceGroup rg-chat `
+    -EnvironmentName cae-chat `
+    -AppName chatapp `
+    -RegistryName &lt;acrName&gt; `
+    -Tag v1 `
+    -EnvVars @{
+        AI_MODE = "model"
+        AZURE_OPENAI_ENDPOINT = "https://&lt;your-resource&gt;.openai.azure.com/"
+        AZURE_OPENAI_DEPLOYMENT_NAME = "gpt-4o-mini"
+    }</pre>
+            <p>
+                The deploy script enables a system-assigned managed identity and grants it
+                <code>AcrPull</code>. Remember to also grant that identity access to your Foundry
+                resource (e.g. <strong>Azure AI User</strong> or
+                <strong>Cognitive Services OpenAI User</strong>).
+            </p>
+
+            <h3>Run locally</h3>
+            <pre><button class="copy" data-copy>Copy</button>$env:AI_MODE = "model"
+$env:AZURE_OPENAI_ENDPOINT = "https://&lt;your-resource&gt;.openai.azure.com/"
+$env:AZURE_OPENAI_DEPLOYMENT_NAME = "gpt-4o-mini"
+dotnet run --project src/ChatApp/ChatApp.csproj</pre>
+            <p class="note">
+                Once deployed, the widget script lives at
+                <code>https://&lt;your-app&gt;/chatbot-widget.js</code> — point the embedding
+                <code>&lt;script src&gt;</code> there, and set <code>data-api-base</code> if the
+                page is hosted on a different domain.
+            </p>
+        </section>
+
+        <section id="hosting">
+            <h2>Hosting this documentation</h2>
+            <p>
+                This site lives in the <code>docs/</code> folder of the repository and is
+                published with GitHub Pages. To enable it:
+            </p>
+            <ol>
+                <li>Open the repository <strong>Settings → Pages</strong>.</li>
+                <li>
+                    Under <em>Build and deployment</em>, set <em>Source</em> to
+                    <strong>Deploy from a branch</strong>.
+                </li>
+                <li>
+                    Choose the <code>main</code> branch and the <code>/docs</code> folder,
+                    then <strong>Save</strong>.
+                </li>
+            </ol>
+            <p class="note">
+                After saving, GitHub publishes the site at
+                <code>https://&lt;org&gt;.github.io/&lt;repo&gt;/</code> within a minute or two.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        Foundry Chatbot · built with .NET 10 and a TypeScript widget · MIT licensed.
+    </footer>
+
+    <script>
+        // Lightweight "copy to clipboard" for each code block.
+        document.querySelectorAll("button[data-copy]").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const pre = btn.parentElement;
+                const text = pre ? pre.innerText.replace(/^Copy\n?/, "") : "";
+                try {
+                    await navigator.clipboard.writeText(text.trim());
+                    const original = btn.textContent;
+                    btn.textContent = "Copied!";
+                    setTimeout(() => (btn.textContent = original), 1400);
+                } catch {
+                    /* clipboard unavailable — ignore */
+                }
+            });
+        });
+    </script>
+</body>
+</html>
