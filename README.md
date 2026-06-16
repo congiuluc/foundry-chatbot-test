@@ -1,45 +1,89 @@
 # Foundry Chatbot (ChatApp)
 
-[![CI](https://github.com/allitude/foundry-chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/allitude/foundry-chatbot/actions/workflows/ci.yml)
+[![CI](https://github.com/congiuluc/foundry-chatbot-test/actions/workflows/ci.yml/badge.svg)](https://github.com/congiuluc/foundry-chatbot-test/actions/workflows/ci.yml)
+[![Deploy GitHub Pages](https://github.com/congiuluc/foundry-chatbot-test/actions/workflows/pages.yml/badge.svg)](https://github.com/congiuluc/foundry-chatbot-test/actions/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4.svg)](https://dotnet.microsoft.com/)
 
-A minimal .NET 10 web application that lets users chat with an AI assistant powered by
+A minimal **.NET 10** web application that lets users chat with an AI assistant powered by
 **Microsoft Foundry** through the **Microsoft Agent Framework**. The backend talks either
 directly to a deployed model or to an existing Foundry agent, streams responses to a
 lightweight HTML/JS UI, and is fully configured through environment variables.
 
-## Description
+The chat experience is also packaged as a **zero-dependency embeddable widget** that can be
+dropped onto any website with a single `<script>` tag.
 
-- ASP.NET Core minimal API (no Blazor, no MVC) with a static chat page served from `wwwroot`.
-- Two backend modes selected by the `AI_MODE` environment variable:
-  - `model` — chat completions against a model deployment.
+---
+
+## Table of contents
+
+- [Features](#features)
+- [Architecture](#architecture)
+- [Quick start](#quick-start)
+- [Configuration](#configuration)
+- [Running locally](#running-locally)
+- [Deployment](#deployment)
+- [Embeddable widget](#embeddable-widget)
+- [Documentation site](#documentation-site)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Features
+
+- **ASP.NET Core minimal API** (no Blazor, no MVC) serving a static chat page from `wwwroot`.
+- **Two backend modes**, selected by the `AI_MODE` environment variable:
+  - `model` — chat completions against an Azure OpenAI / Foundry model deployment.
   - `agent` — an existing agent hosted on Microsoft Foundry.
-- Authentication: uses an API key when `AZURE_OPENAI_API_KEY` is set; otherwise falls back to
-  **managed identity** (`DefaultAzureCredential`, honoring `AZURE_CLIENT_ID` for a
-  user-assigned identity).
-- Streamed (token-by-token) responses over Server-Sent Events.
-- Built-in light / dark / system theme toggle in the chat widget (and on the demo page).
-- Serilog logging (console + rolling file), Swagger UI, health checks, response compression,
-  and consistent JSON error handling.
-- Containerized and deployable to Azure Container Apps via the included scripts, or pulled
-  from Docker Hub via the automated release workflow.
+- **Flexible authentication**: uses an API key when `AZURE_OPENAI_API_KEY` is set; otherwise
+  falls back to **managed identity** (`DefaultAzureCredential`, honoring `AZURE_CLIENT_ID`
+  for a user-assigned identity).
+- **Streamed responses** (token-by-token) over Server-Sent Events.
+- **Light / dark / system theme toggle** in the chat widget and the demo page.
+- **Production-ready plumbing**: Serilog logging (console + rolling file), Swagger UI,
+  health checks, response compression, and consistent JSON error handling.
+- **Containerized** and deployable to Azure Container Apps via the included scripts, or
+  pulled from Docker Hub through the automated release workflow.
+- **Embeddable widget**: a single self-contained `chatbot-widget.js` with no runtime
+  dependencies, fully themeable through `data-*` attributes.
 
-## Installation
+## Architecture
+
+```
+src/ChatApp/
+├── Program.cs              # App startup, DI, middleware, endpoint mapping
+├── Endpoints/              # Minimal API endpoints (chat, health)
+├── Services/               # Chat agent providers and credential factory
+├── Middleware/             # Centralized error handling
+├── Models/                 # Request/response DTOs
+├── Configuration/          # Strongly-typed options bound from env vars
+├── wwwroot/                # Static chat page + built widget bundle
+└── widget/                 # TypeScript sources for the embeddable widget
+
+docs/                       # GitHub Pages site (widget reference & examples)
+scripts/                    # PowerShell build/deploy helpers
+```
+
+At runtime the app selects a chat provider based on `AI_MODE`, resolves credentials
+(API key or managed identity), and exposes a streaming chat endpoint consumed by both the
+bundled chat page and the embeddable widget.
+
+## Quick start
 
 Prerequisites: [.NET 10 SDK](https://dotnet.microsoft.com/), and (for deployment) the
 [Azure CLI](https://learn.microsoft.com/cli/azure/) with the `containerapp` extension.
 
 ```powershell
-git clone <your-repo-url>
-cd App
+git clone https://github.com/congiuluc/foundry-chatbot-test.git
+cd foundry-chatbot-test
 dotnet restore src/ChatApp/ChatApp.csproj
 dotnet build src/ChatApp/ChatApp.csproj -c Release
 ```
 
-## Usage
+## Configuration
 
-### Configuration (environment variables)
+All configuration is supplied through environment variables:
 
 | Variable | Mode | Description |
 |----------|------|-------------|
@@ -54,7 +98,7 @@ dotnet build src/ChatApp/ChatApp.csproj -c Release
 | `CHAT_SYSTEM_PROMPT` | model | Optional system instructions. |
 | `CHAT_AGENT_NAME` | model | Optional agent display name. |
 
-### Run locally
+## Running locally
 
 ```powershell
 $env:AI_MODE = "model"
@@ -64,7 +108,10 @@ $env:AZURE_OPENAI_DEPLOYMENT_NAME = "gpt-4o-mini"
 dotnet run --project src/ChatApp/ChatApp.csproj
 ```
 
-Then open the printed URL. Swagger is at `/swagger`, health at `/healthz`.
+Then open the printed URL. Swagger is available at `/swagger` and the health check at
+`/healthz`.
+
+## Deployment
 
 ### Build & push the container image
 
@@ -158,9 +205,6 @@ invalid values are ignored and fall back to the defaults.
 The widget also includes an interactive light / dark / system theme toggle (a header icon
 button plus a selector in the settings panel); the chosen theme is remembered per session.
 
-A full reference with live, copyable examples is published as a
-[GitHub Pages site](https://allitude.github.io/foundry-chatbot/) (sources in `docs/`).
-
 ### Rebuilding the widget bundle
 
 ```powershell
@@ -168,6 +212,13 @@ cd src/ChatApp/widget
 npm install
 npm run build      # outputs ../wwwroot/chatbot-widget.js
 ```
+
+## Documentation site
+
+A full widget reference with live, copyable examples is published as a
+[GitHub Pages site](https://congiuluc.github.io/foundry-chatbot-test/) (sources in `docs/`).
+It is deployed automatically by the [Pages workflow](.github/workflows/pages.yml) whenever
+the `docs/` directory changes on `main`.
 
 ## Contributing
 
