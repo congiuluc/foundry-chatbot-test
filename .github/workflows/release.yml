@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 env:
-  IMAGE_NAME: chatapp
+  IMAGE_NAME: foundry-chatbot-test
 
 jobs:
   release:
