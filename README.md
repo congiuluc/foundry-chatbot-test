@@ -1,6 +1,6 @@
 # Foundry Chatbot (ChatApp)
 
-[![CI](https://github.com/allitude/foundry-chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/allitude/foundry-chatbot/actions/workflows/ci.yml)
+[![CI](https://github.com/congiuluc/foundry-chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/congiuluc/foundry-chatbot/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4.svg)](https://dotnet.microsoft.com/)
 
@@ -159,7 +159,7 @@ The widget also includes an interactive light / dark / system theme toggle (a he
 button plus a selector in the settings panel); the chosen theme is remembered per session.
 
 A full reference with live, copyable examples is published as a
-[GitHub Pages site](https://allitude.github.io/foundry-chatbot/) (sources in `docs/`).
+[GitHub Pages site](https://congiuluc.github.io/foundry-chatbot/) (sources in `docs/`).
 
 ### Rebuilding the widget bundle
 

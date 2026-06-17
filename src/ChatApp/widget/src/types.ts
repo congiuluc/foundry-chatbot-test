@@ -55,6 +55,20 @@ export interface ChatMessage {
     reasoning?: string;
 }
 
+/**
+ * The payload returned by the backend `/settings` endpoint: the non-secret
+ * default chat settings plus the backend configuration status used to remind
+ * the user to supply missing environment variables or session settings.
+ */
+export interface DefaultSettingsResponse extends Partial<ChatSettings> {
+    /** Whether the backend has all required configuration for its mode. */
+    configured?: boolean;
+    /** Environment variables still missing when not configured. */
+    missingVariables?: string[];
+    /** Human-readable reminder shown in the UI when not configured. */
+    configurationMessage?: string | null;
+}
+
 /** A parsed Server-Sent Event. */
 export interface SseEvent {
     event: string;

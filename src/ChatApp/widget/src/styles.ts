@@ -180,6 +180,39 @@ export function createStyles(config: WidgetConfig): string {
     text-align: center;
 }
 
+.cb-notice {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--cb-accent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--cb-accent) 14%, var(--cb-panel));
+    color: var(--cb-text);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.cb-notice-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.cb-notice-btn {
+    align-self: flex-start;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    background: var(--cb-accent);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.cb-notice-btn:hover {
+    filter: brightness(1.08);
+}
+
 .cb-message {
     max-width: 80%;
     padding: 10px 12px;

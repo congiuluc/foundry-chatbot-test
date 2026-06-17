@@ -67,6 +67,9 @@ export class ChatWidget {
     private isBusy = false;
     private settingsLoaded = false;
 
+    // Reminder shown when the backend reports it is missing required configuration.
+    private configNotice: string | null = null;
+
     // Element references.
     private panel!: HTMLDivElement;
     private launcher!: HTMLButtonElement;
@@ -483,6 +486,12 @@ export class ChatWidget {
         void fetchDefaultSettings(this.config.apiBase).then((defaults) => {
             if (defaults) {
                 this.settings = { ...EMPTY_SETTINGS, ...defaults };
+                if (defaults.configured === false) {
+                    this.configNotice =
+                        defaults.configurationMessage ??
+                        "The chatbot backend isn't fully configured yet. Open Settings to provide the required values.";
+                    this.renderMessages();
+                }
             }
             this.settingsLoaded = true;
         });
@@ -618,6 +627,10 @@ export class ChatWidget {
     private renderMessages(): void {
         this.messagesEl.replaceChildren();
 
+        if (this.configNotice) {
+            this.messagesEl.appendChild(this.buildConfigNotice(this.configNotice));
+        }
+
         if (this.conversation.messages.length === 0) {
             const empty = document.createElement("div");
             empty.className = "cb-empty";
@@ -693,6 +706,34 @@ export class ChatWidget {
             indicator.appendChild(dot);
         }
         return indicator;
+    }
+
+    /**
+     * Builds the configuration reminder banner shown when the backend reports it is
+     * missing required environment variables. When the settings panel is available the
+     * banner offers a button that opens it so the values can be supplied for this session.
+     */
+    private buildConfigNotice(text: string): HTMLDivElement {
+        const notice = document.createElement("div");
+        notice.className = "cb-notice";
+        notice.setAttribute("role", "status");
+
+        const body = document.createElement("div");
+        body.className = "cb-notice-text";
+        // textContent (never innerHTML) keeps the message from being interpreted as markup.
+        body.textContent = text;
+        notice.appendChild(body);
+
+        if (this.config.allowSettings) {
+            const open = document.createElement("button");
+            open.type = "button";
+            open.className = "cb-notice-btn";
+            open.textContent = "Open Settings";
+            open.addEventListener("click", () => this.openSettings());
+            notice.appendChild(open);
+        }
+
+        return notice;
     }
 
     private scrollToBottom(): void {

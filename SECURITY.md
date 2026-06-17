@@ -13,7 +13,7 @@ Instead, report them privately using one of the following channels:
 
 - Use GitHub's [private vulnerability reporting](https://docs.github.com/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability)
   ("Report a vulnerability" under the **Security** tab), or
-- Email the maintainers at **security@allitude.example** with the details.
+- Email the maintainers at **security@congiuluc.example** with the details.
 
 Please include:
 

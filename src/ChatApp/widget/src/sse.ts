@@ -1,4 +1,4 @@
-import type { ChatSettings, SseEvent } from "./types";
+import type { ChatSettings, DefaultSettingsResponse, SseEvent } from "./types";
 import { logger } from "./logger";
 
 /**
@@ -142,14 +142,14 @@ function interpretFrame(evt: SseEvent): StreamFrame {
 }
 
 /** Fetches the non-secret default settings exposed by the backend. */
-export async function fetchDefaultSettings(apiBase: string): Promise<Partial<ChatSettings> | null> {
+export async function fetchDefaultSettings(apiBase: string): Promise<DefaultSettingsResponse | null> {
     try {
         const response = await fetch(`${apiBase}/settings`);
         if (!response.ok) {
             logger.warn("default settings request returned a non-OK status", { status: response.status });
             return null;
         }
-        const payload = (await response.json()) as { data?: Partial<ChatSettings> };
+        const payload = (await response.json()) as { data?: DefaultSettingsResponse };
         logger.debug("default settings loaded", payload.data ?? null);
         return payload.data ?? null;
     } catch (error) {

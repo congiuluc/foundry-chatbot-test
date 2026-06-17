@@ -72,7 +72,10 @@ public static class ChatEndpoints
     private static void MapSettings(IEndpointRouteBuilder app)
     {
         app.MapGet("/settings", (ChatOptions options) =>
-            Results.Ok(ApiResponse<object>.Ok(new
+        {
+            var configured = options.IsConfigured(out var missingVariables);
+
+            return Results.Ok(ApiResponse<object>.Ok(new
             {
                 mode = options.Mode,
                 openAIEndpoint = options.OpenAIEndpoint,
@@ -82,10 +85,27 @@ public static class ChatEndpoints
                 foundryAgentVersion = options.FoundryAgentVersion,
                 systemPrompt = options.SystemPrompt,
                 agentName = options.AgentName,
-            })))
+                configured,
+                missingVariables,
+                configurationMessage = configured
+                    ? null
+                    : BuildConfigurationReminder(missingVariables),
+            }));
+        })
         .WithName("GetSettings")
         .WithSummary("Returns the non-secret default chat settings.");
     }
+
+    /// <summary>
+    /// Builds the human-readable reminder shown in the UI when the backend is missing
+    /// required configuration, listing the environment variables that need to be set.
+    /// </summary>
+    /// <param name="missingVariables">The environment variables that are not yet configured.</param>
+    /// <returns>A reminder message for the user.</returns>
+    private static string BuildConfigurationReminder(IReadOnlyList<string> missingVariables) =>
+        "The chatbot backend isn't fully configured yet. Set the following environment variable(s): "
+        + string.Join(", ", missingVariables)
+        + " \u2014 or open Settings (the gear icon) to provide them for this session.";
 
     #endregion
 

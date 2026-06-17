@@ -118,24 +118,51 @@ public sealed class ChatOptions
                 $"AI_MODE must be '{ModeModel}' or '{ModeAgent}', but was '{Mode}'.");
         }
 
-        if (Mode == ModeModel)
+        if (!IsConfigured(out var missing))
         {
-            Require(OpenAIEndpoint, "AZURE_OPENAI_ENDPOINT");
-            Require(DeploymentName, "AZURE_OPENAI_DEPLOYMENT_NAME");
-        }
-        else
-        {
-            Require(FoundryProjectEndpoint, "AZURE_FOUNDRY_PROJECT_ENDPOINT");
-            Require(FoundryAgentId, "AZURE_FOUNDRY_AGENT_ID");
+            throw new InvalidOperationException(
+                $"Required environment variable(s) not set for AI_MODE '{Mode}': {string.Join(", ", missing)}.");
         }
     }
 
-    private static void Require(string? value, string variableName)
+    /// <summary>
+    /// Checks, without throwing, whether the options required for the selected
+    /// <see cref="Mode"/> are present. Used at startup so the application can run and
+    /// prompt the user to supply configuration instead of crashing.
+    /// </summary>
+    /// <param name="missingVariables">
+    /// Receives the names of the environment variables that still need to be set for the
+    /// current mode. Empty when the configuration is complete.
+    /// </param>
+    /// <returns><see langword="true"/> when fully configured; otherwise <see langword="false"/>.</returns>
+    public bool IsConfigured(out IReadOnlyList<string> missingVariables)
+    {
+        var missing = new List<string>();
+
+        if (Mode is not (ModeModel or ModeAgent))
+        {
+            missing.Add("AI_MODE");
+        }
+        else if (Mode == ModeModel)
+        {
+            AddIfMissing(missing, OpenAIEndpoint, "AZURE_OPENAI_ENDPOINT");
+            AddIfMissing(missing, DeploymentName, "AZURE_OPENAI_DEPLOYMENT_NAME");
+        }
+        else
+        {
+            AddIfMissing(missing, FoundryProjectEndpoint, "AZURE_FOUNDRY_PROJECT_ENDPOINT");
+            AddIfMissing(missing, FoundryAgentId, "AZURE_FOUNDRY_AGENT_ID");
+        }
+
+        missingVariables = missing;
+        return missing.Count == 0;
+    }
+
+    private static void AddIfMissing(List<string> missing, string? value, string variableName)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new InvalidOperationException(
-                $"Required environment variable '{variableName}' is not set for the selected AI_MODE.");
+            missing.Add(variableName);
         }
     }
 

@@ -24,9 +24,19 @@ try
             rollingInterval: RollingInterval.Day,
             retainedFileCountLimit: 7));
 
-    // Bind configuration from the ChatOptions section (env vars override) and validate.
+    // Bind configuration from the ChatOptions section (env vars override). Rather than
+    // crashing when required settings are missing, the app starts anyway and surfaces a
+    // reminder to the UI (via /settings) so the user can set environment variables or
+    // provide the values through the in-app settings panel.
     var chatOptions = ChatOptions.Load(builder.Configuration);
-    chatOptions.Validate();
+    if (!chatOptions.IsConfigured(out var missingVariables))
+    {
+        Log.Warning(
+            "ChatApp started with incomplete configuration for AI_MODE '{Mode}'. Missing: {Missing}. " +
+            "The UI will prompt for these; chat requests will fail until they are set.",
+            chatOptions.Mode,
+            string.Join(", ", missingVariables));
+    }
     builder.Services.AddSingleton(chatOptions);
 
     // Application services.
