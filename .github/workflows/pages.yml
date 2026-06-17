@@ -14,10 +14,11 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment, cancelling in-progress runs for the same ref.
+# Allow one concurrent deployment. Do not cancel in-progress runs so that
+# production deployments are always allowed to complete.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -27,10 +28,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # Automatically enable GitHub Pages (with the GitHub Actions source)
+          # the first time this workflow runs, so the deploy does not fail when
+          # Pages has not been turned on manually in the repository settings.
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -39,4 +45,4 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
