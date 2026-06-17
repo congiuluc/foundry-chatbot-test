@@ -1,16 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Foundry Chatbot">
-    <defs>
-        <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#3b82f6" />
-            <stop offset="1" stop-color="#1d4ed8" />
-        </linearGradient>
-    </defs>
-    <rect width="32" height="32" rx="8" fill="url(#bg)" />
-    <g transform="translate(4 4)">
-        <path fill="#ffffff"
-            d="M12 3C6.48 3 2 6.94 2 11.5c0 2.3 1.13 4.37 2.96 5.86-.13 1.06-.6 2.45-1.62 3.4-.2.2-.06.55.22.53 1.9-.16 3.62-.86 4.9-1.86.78.2 1.6.31 2.45.31 5.52 0 10-3.94 10-8.5S17.52 3 12 3z" />
-        <circle cx="8" cy="11.5" r="1.4" fill="#1d4ed8" />
-        <circle cx="12" cy="11.5" r="1.4" fill="#1d4ed8" />
-        <circle cx="16" cy="11.5" r="1.4" fill="#1d4ed8" />
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" aria-label="Foundry Chatbot" role="img" viewBox="0 0 32 32"><defs><linearGradient id="bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs><rect width="32" height="32" fill="url(#bg)" rx="8"/><g transform="translate(4 4)"><path fill="#fff" d="M12 3C6.48 3 2 6.94 2 11.5c0 2.3 1.13 4.37 2.96 5.86-.13 1.06-.6 2.45-1.62 3.4-.2.2-.06.55.22.53 1.9-.16 3.62-.86 4.9-1.86.78.2 1.6.31 2.45.31 5.52 0 10-3.94 10-8.5S17.52 3 12 3z"/><circle cx="8" cy="11.5" r="1.4" fill="#1d4ed8"/><circle cx="12" cy="11.5" r="1.4" fill="#1d4ed8"/><circle cx="16" cy="11.5" r="1.4" fill="#1d4ed8"/></g></svg>
